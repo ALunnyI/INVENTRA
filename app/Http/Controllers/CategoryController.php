@@ -47,7 +47,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        if ($category->assets()->exists()) {
+        if ($category->assets()->withTrashed()->exists()) {
             return back()->with('error', 'Kategori masih dipakai oleh aset, tidak bisa dihapus.');
         }
 
