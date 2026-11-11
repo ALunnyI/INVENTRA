@@ -2,12 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Asset extends Model
 {
     use SoftDeletes;
+
+    public const CONDITIONS = [
+        'baik'         => 'Baik',
+        'rusak_ringan' => 'Rusak Ringan',
+        'rusak_berat'  => 'Rusak Berat',
+    ];
+
+    public const STATUSES = [
+        'tersedia'    => 'Tersedia',
+        'dipinjam'    => 'Dipinjam',
+        'maintenance' => 'Maintenance',
+    ];
 
     protected $fillable = [
         'category_id','asset_code','name','brand','serial_number',
