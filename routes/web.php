@@ -18,8 +18,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('categories', CategoryController::class)->except('show');
-    Route::resource('departments', DepartmentController::class)->except('show');
+    Route::middleware('admin')->group(function () {
+        Route::resource('categories', CategoryController::class)->except('show');
+        Route::resource('departments', DepartmentController::class)->except('show');
+    });
 });
+
+
 
 require __DIR__.'/auth.php';
