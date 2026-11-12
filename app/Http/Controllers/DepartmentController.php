@@ -47,7 +47,7 @@ class DepartmentController extends Controller
 
     public function destroy(Department $department)
     {
-        if ($department->users()->withTrashed()->exists()) {
+        if ($department->users()->exists()) {
             return back()->with('error', 'Department masih aktif, tidak bisa dihapus.');
         }
 
