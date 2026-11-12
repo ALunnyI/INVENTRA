@@ -31,4 +31,11 @@ class Asset extends Model
 
     public function category() { return $this->belongsTo(Category::class); }
     public function loans()    { return $this->hasMany(Loan::class); }
+
+    protected function photoUrl(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->photo ? asset('storage/' . $this->photo) : null
+        );
+    }
 }
