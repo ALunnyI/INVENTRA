@@ -58,9 +58,9 @@ class AssetSeeder extends Seeder
 
                 Asset::factory()->create([
                     'category_id' => $category->id,
-                    'asset_code'  => sprintf('%s-%03d', $group['prefix'], $i),
-                    'name'        => "{$group['label']} {$brand} {$model}",
-                    'brand'       => $brand,
+                    'asset_code' => sprintf('%s-%03d', $group['prefix'], $i),
+                    'name' => "{$group['label']} {$brand} {$model}",
+                    'brand' => $brand,
                 ]);
             }
         }

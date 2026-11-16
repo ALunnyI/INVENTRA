@@ -21,16 +21,16 @@ class AssetFactory extends Factory
             : fake()->randomElement(['tersedia', 'tersedia', 'tersedia', 'maintenance']);
 
         return [
-            'category_id'   => Category::inRandomOrder()->value('id'),
-            'asset_code'    => 'AST-' . fake()->unique()->numerify('####'),
-            'name'          => fake()->words(2, true),
-            'brand'         => fake()->company(),
+            'category_id' => Category::inRandomOrder()->value('id'),
+            'asset_code' => 'AST-'.fake()->unique()->numerify('####'),
+            'name' => fake()->words(2, true),
+            'brand' => fake()->company(),
             'serial_number' => strtoupper(fake()->bothify('??#####??')),
             'purchase_date' => fake()->dateTimeBetween('-4 years', '-1 month'),
-            'condition'     => $condition,
-            'status'        => $status,
-            'photo'         => null,
-            'notes'         => fake()->optional(0.3)->sentence(),
+            'condition' => $condition,
+            'status' => $status,
+            'photo' => null,
+            'notes' => fake()->optional(0.3)->sentence(),
         ];
     }
 }

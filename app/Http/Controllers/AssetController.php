@@ -24,8 +24,8 @@ class AssetController extends Controller implements HasMiddleware
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('asset_code', 'like', "%{$search}%")
-                      ->orWhere('serial_number', 'like', "%{$search}%");
+                        ->orWhere('asset_code', 'like', "%{$search}%")
+                        ->orWhere('serial_number', 'like', "%{$search}%");
                 });
             })
             ->when($request->category_id, fn ($q, $id) => $q->where('category_id', $id))

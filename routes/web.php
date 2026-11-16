@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AssetController;
-use App\Http\Controllers\LoanController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +31,5 @@ Route::middleware('auth')->group(function () {
         Route::resource('departments', DepartmentController::class)->except('show');
     });
 });
-
-
 
 require __DIR__.'/auth.php';

@@ -31,16 +31,16 @@ class LoanController extends Controller implements HasMiddleware
                 $q->whereHas('asset', function ($a) use ($search) {
                     $a->withTrashed()->where(function ($w) use ($search) {
                         $w->where('name', 'like', "%{$search}%")
-                          ->orWhere('asset_code', 'like', "%{$search}%");
+                            ->orWhere('asset_code', 'like', "%{$search}%");
                     });
                 });
             })
             ->when($request->status, function ($q, $status) {
                 match ($status) {
                     'dikembalikan' => $q->whereNotNull('returned_at'),
-                    'terlambat'    => $q->overdue(),
-                    'dipinjam'     => $q->active()->whereDate('due_date', '>=', today()),
-                    default        => null,
+                    'terlambat' => $q->overdue(),
+                    'dipinjam' => $q->active()->whereDate('due_date', '>=', today()),
+                    default => null,
                 };
             })
             ->latest('loan_date')
@@ -54,18 +54,18 @@ class LoanController extends Controller implements HasMiddleware
     public function create(Request $request)
     {
         $assets = Asset::where('status', 'tersedia')->orderBy('name')->get();
-        $users  = $request->user()->isAdmin() ? User::orderBy('name')->get() : collect();
+        $users = $request->user()->isAdmin() ? User::orderBy('name')->get() : collect();
 
         return view('loans.create', [
-            'assets'        => $assets,
-            'users'         => $users,
+            'assets' => $assets,
+            'users' => $users,
             'selectedAsset' => $request->query('asset_id'),
         ]);
     }
 
     public function store(StoreLoanRequest $request)
     {
-        $data  = $request->validated();
+        $data = $request->validated();
         $actor = $request->user();
 
         // Staff selalu meminjam untuk dirinya sendiri; admin boleh memilih peminjam
@@ -87,16 +87,16 @@ class LoanController extends Controller implements HasMiddleware
 
             if ($activeCount >= Loan::MAX_ACTIVE_PER_USER) {
                 throw ValidationException::withMessages([
-                    'asset_id' => 'Peminjam sudah mencapai batas ' . Loan::MAX_ACTIVE_PER_USER . ' peminjaman aktif.',
+                    'asset_id' => 'Peminjam sudah mencapai batas '.Loan::MAX_ACTIVE_PER_USER.' peminjaman aktif.',
                 ]);
             }
 
             Loan::create([
-                'asset_id'  => $asset->id,
-                'user_id'   => $borrowerId,
+                'asset_id' => $asset->id,
+                'user_id' => $borrowerId,
                 'loan_date' => today(),
-                'due_date'  => $data['due_date'],
-                'notes'     => $data['notes'] ?? null,
+                'due_date' => $data['due_date'],
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $asset->update(['status' => 'dipinjam']);
@@ -125,7 +125,7 @@ class LoanController extends Controller implements HasMiddleware
             $asset = Asset::withTrashed()->lockForUpdate()->find($fresh->asset_id);
             $asset->update([
                 'condition' => $data['condition'],
-                'status'    => $data['condition'] === 'rusak_berat' ? 'maintenance' : 'tersedia',
+                'status' => $data['condition'] === 'rusak_berat' ? 'maintenance' : 'tersedia',
             ]);
 
             return true;

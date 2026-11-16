@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function __invoke(Request $request)
     {
-        $user    = $request->user();
+        $user = $request->user();
         $isAdmin = $user->isAdmin();
 
         // Satu query untuk semua hitungan status aset
@@ -20,9 +20,9 @@ class DashboardController extends Controller
             ->pluck('total', 'status');
 
         $stats = [
-            'total'       => $assetsByStatus->sum(),
-            'tersedia'    => $assetsByStatus->get('tersedia', 0),
-            'dipinjam'    => $assetsByStatus->get('dipinjam', 0),
+            'total' => $assetsByStatus->sum(),
+            'tersedia' => $assetsByStatus->get('tersedia', 0),
+            'dipinjam' => $assetsByStatus->get('dipinjam', 0),
             'maintenance' => $assetsByStatus->get('maintenance', 0),
         ];
 
@@ -31,9 +31,9 @@ class DashboardController extends Controller
         $loans = fn () => Loan::query()
             ->when(! $isAdmin, fn ($q) => $q->where('user_id', $user->id));
 
-        $activeLoans  = $loans()->active()->count();
+        $activeLoans = $loans()->active()->count();
         $overdueLoans = $loans()->overdue()->count();
-        $dueSoon      = $loans()->active()
+        $dueSoon = $loans()->active()
             ->whereBetween('due_date', [today(), today()->addDays(3)])
             ->count();
 
@@ -52,7 +52,7 @@ class DashboardController extends Controller
             ->get();
 
         // Khusus admin
-        $categories      = collect();
+        $categories = collect();
         $conditionCounts = collect();
 
         if ($isAdmin) {

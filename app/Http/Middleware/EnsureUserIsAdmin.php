@@ -18,6 +18,7 @@ class EnsureUserIsAdmin
         if (! $request->user()?->isAdmin()) {
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
+
         return $next($request);
     }
 }

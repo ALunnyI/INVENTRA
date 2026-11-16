@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Loan extends Model
 {
     public const MAX_ACTIVE_PER_USER = 3;
-    public const MAX_DURATION_DAYS   = 30;
+
+    public const MAX_DURATION_DAYS = 30;
 
     public const STATUS_LABELS = [
-        'dipinjam'     => 'Dipinjam',
-        'terlambat'    => 'Terlambat',
+        'dipinjam' => 'Dipinjam',
+        'terlambat' => 'Terlambat',
         'dikembalikan' => 'Dikembalikan',
     ];
 
@@ -20,8 +21,8 @@ class Loan extends Model
     ];
 
     protected $casts = [
-        'loan_date'   => 'date',
-        'due_date'    => 'date',
+        'loan_date' => 'date',
+        'due_date' => 'date',
         'returned_at' => 'datetime',
     ];
 

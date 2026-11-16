@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-     // up()
-    Schema::table('users', function (Blueprint $table) {
-        $table->enum('role', ['admin', 'staff'])->default('staff')->after('email');
-        $table->foreignId('department_id')->nullable()->after('role')
-            ->constrained()->nullOnDelete();
-    });
+        // up()
+        Schema::table('users', function (Blueprint $table) {
+            $table->enum('role', ['admin', 'staff'])->default('staff')->after('email');
+            $table->foreignId('department_id')->nullable()->after('role')
+                ->constrained()->nullOnDelete();
+        });
     }
 
     /**

@@ -26,7 +26,7 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama department wajib diisi.',
-            'name.unique'   => 'Nama department sudah digunakan.',
+            'name.unique' => 'Nama department sudah digunakan.',
         ];
     }
 }

@@ -9,7 +9,7 @@ class CategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; 
+        return true;
     }
 
     public function rules(): array
@@ -27,7 +27,7 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'Nama kategori wajib diisi.',
-            'name.unique'   => 'Nama kategori sudah digunakan.',
+            'name.unique' => 'Nama kategori sudah digunakan.',
         ];
     }
 }
