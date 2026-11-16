@@ -22,6 +22,10 @@
             </dl>
 
             <a href="{{ route('assets.index') }}" class="mt-6 inline-block text-indigo-600">&larr; Kembali</a>
+            @if ($asset->status === 'tersedia')
+                <a href="{{ route('loans.create', ['asset_id' => $asset->id]) }}"
+                class="mt-6 ml-4 inline-block px-4 py-2 bg-green-600 text-white rounded">Pinjam Aset Ini</a>
+            @endif
         </div>
     </div>
 </x-app-layout>

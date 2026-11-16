@@ -82,6 +82,9 @@
                         <td class="p-3">
                             <div class="flex gap-3">
                                 <a href="{{ route('assets.show', $asset) }}" class="text-gray-700">Detail</a>
+                                @if ($asset->status === 'tersedia')
+                                    <a href="{{ route('loans.create', ['asset_id' => $asset->id]) }}" class="text-green-700">Pinjam</a>
+                                @endif
                                 @if (auth()->user()->isAdmin())
                                     <a href="{{ route('assets.edit', $asset) }}" class="text-indigo-600">Edit</a>
                                     <form method="POST" action="{{ route('assets.destroy', $asset) }}"
