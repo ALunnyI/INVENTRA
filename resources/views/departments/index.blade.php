@@ -30,7 +30,9 @@
                     <td class="p-3 flex gap-3">
                         <a href="{{ route('departments.edit', $department) }}" class="text-indigo-600">Edit</a>
                         <form method="POST" action="{{ route('departments.destroy', $department) }}"
-                              onsubmit="return confirm('Hapus department ini?')">
+                            data-confirm="Departemen {{ $department->name }} akan dihapus. Tindakan ini tidak dapat dibatalkan."
+                            data-confirm-title="Hapus departemen?"
+                            data-confirm-button="Ya, hapus">
                             @csrf @method('DELETE')
                             <button class="text-red-600">Hapus</button>
                         </form>

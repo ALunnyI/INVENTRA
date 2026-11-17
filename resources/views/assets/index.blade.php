@@ -88,7 +88,9 @@
                                 @if (auth()->user()->isAdmin())
                                     <a href="{{ route('assets.edit', $asset) }}" class="text-indigo-600">Edit</a>
                                     <form method="POST" action="{{ route('assets.destroy', $asset) }}"
-                                          onsubmit="return confirm('Hapus aset ini?')">
+                                        data-confirm="Aset {{ $asset->name }} ({{ $asset->asset_code }}) akan dihapus dari daftar. Riwayat peminjamannya tetap tersimpan."
+                                        data-confirm-title="Hapus aset?"
+                                        data-confirm-button="Ya, hapus">
                                         @csrf @method('DELETE')
                                         <button class="text-red-600">Hapus</button>
                                     </form>

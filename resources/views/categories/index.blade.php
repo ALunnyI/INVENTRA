@@ -30,7 +30,9 @@
                     <td class="p-3 flex gap-3">
                         <a href="{{ route('categories.edit', $category) }}" class="text-indigo-600">Edit</a>
                         <form method="POST" action="{{ route('categories.destroy', $category) }}"
-                              onsubmit="return confirm('Hapus kategori ini?')">
+                            data-confirm="Kategori {{ $category->name }} akan dihapus. Tindakan ini tidak dapat dibatalkan."
+                            data-confirm-title="Hapus kategori?"
+                            data-confirm-button="Ya, hapus">
                             @csrf @method('DELETE')
                             <button class="text-red-600">Hapus</button>
                         </form>

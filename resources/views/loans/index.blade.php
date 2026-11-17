@@ -76,8 +76,11 @@
                             <td class="p-3">
                                 @unless ($loan->returned_at)
                                     <form method="POST" action="{{ route('loans.return', $loan) }}"
-                                          class="flex gap-2"
-                                          onsubmit="return confirm('Catat pengembalian aset ini?')">
+                                        class="flex gap-2"
+                                        data-confirm="{{ $loan->asset->name }} akan dicatat sudah dikembalikan dengan kondisi yang kamu pilih."
+                                        data-confirm-title="Catat pengembalian?"
+                                        data-confirm-button="Ya, catat"
+                                        data-confirm-tone="primary">
                                         @csrf
                                         @method('PATCH')
                                         <select name="condition" class="border-gray-300 rounded-md text-sm">
