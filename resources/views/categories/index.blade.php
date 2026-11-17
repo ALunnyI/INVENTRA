@@ -19,7 +19,7 @@
         </div>
 
         <table class="w-full bg-white shadow rounded text-left">
-            <thead class="bg-gray-100">
+            <thead class="bg-indigo-50 text-indigo-900">
                 <tr><th class="p-3">Nama</th><th class="p-3">Jumlah Aset</th><th class="p-3">Aksi</th></tr>
             </thead>
             <tbody>
