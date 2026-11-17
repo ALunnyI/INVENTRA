@@ -56,6 +56,9 @@
                     <tr class="border-t">
                         <td class="p-3">
                             {{ $loan->asset->name }}
+                            @if ($loan->asset->trashed())
+                                <span class="text-xs text-red-600">(dihapus)</span>
+                            @endif
                             <div class="text-xs text-gray-500">{{ $loan->asset->asset_code }}</div>
                         </td>
                         <td class="p-3">{{ $loan->user->name }}</td>

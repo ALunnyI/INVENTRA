@@ -61,11 +61,73 @@ class AssetController extends Controller implements HasMiddleware
             ->with('success', 'Aset berhasil ditambahkan.');
     }
 
-    public function show(Asset $asset)
+    public function show(Request $request, Asset $asset)
     {
+        $isAdmin = $request->user()->isAdmin();
+
+        // Staff tidak boleh melihat aset yang sudah dihapus
+        if ($asset->trashed() && ! $isAdmin) {
+            abort(404);
+        }
+
         $asset->load('category');
 
-        return view('assets.show', compact('asset'));
+        // Riwayat peminjaman hanya untuk admin (memuat nama peminjam lain)
+        $loans = $isAdmin
+            ? $asset->loans()->with('user')->latest('loan_date')->latest('id')->take(20)->get()
+            : collect();
+
+        return view('assets.show', compact('asset', 'loans'));
+    }
+
+    public function trashed(Request $request)
+    {
+        $assets = Asset::onlyTrashed()
+            ->with('category')
+            ->withCount('loans')
+            ->when($request->search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('asset_code', 'like', "%{$search}%");
+                });
+            })
+            ->latest('deleted_at')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('assets.trashed', compact('assets'));
+    }
+
+    public function restore(Asset $asset)
+    {
+        if (! $asset->trashed()) {
+            return redirect()->route('assets.index');
+        }
+
+        $asset->restore();
+
+        return redirect()->route('assets.index')
+            ->with('success', "Aset {$asset->name} berhasil dipulihkan.");
+    }
+
+    public function forceDestroy(Asset $asset)
+    {
+        if (! $asset->trashed()) {
+            abort(404);
+        }
+
+        // Riwayat peminjaman harus tetap utuh, jadi aset yang pernah dipinjam tidak boleh dihapus permanen
+        if ($asset->loans()->exists()) {
+            return back()->with('error', 'Aset ini punya riwayat peminjaman sehingga tidak bisa dihapus permanen.');
+        }
+
+        if ($asset->photo) {
+            Storage::disk('public')->delete($asset->photo);
+        }
+
+        $asset->forceDelete();
+
+        return back()->with('success', 'Aset berhasil dihapus permanen.');
     }
 
     public function edit(Asset $asset)

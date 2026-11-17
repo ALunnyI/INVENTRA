@@ -19,7 +19,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('assets', AssetController::class);
+    Route::get('/assets/trashed', [AssetController::class, 'trashed'])->name('assets.trashed');
+    Route::patch('/assets/{asset}/restore', [AssetController::class, 'restore'])
+        ->withTrashed()->name('assets.restore');
+    Route::delete('/assets/{asset}/force', [AssetController::class, 'forceDestroy'])
+        ->withTrashed()->name('assets.force-destroy');
+
+Route::resource('assets', AssetController::class)->withTrashed(['show']);
 
     Route::resource('loans', LoanController::class)->only(['index', 'create', 'store']);
     Route::patch('/loans/{loan}/return', [LoanController::class, 'markReturned'])->name('loans.return');

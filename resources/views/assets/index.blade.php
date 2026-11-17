@@ -35,8 +35,12 @@
             </form>
 
             @if (auth()->user()->isAdmin())
-                <a href="{{ route('assets.create') }}"
-                   class="px-4 py-2 bg-indigo-600 text-white rounded">+ Tambah</a>
+                <div class="flex gap-2">
+                    <a href="{{ route('assets.trashed') }}"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">Aset Terhapus</a>
+                    <a href="{{ route('assets.create') }}"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded">+ Tambah</a>
+                </div>
             @endif
         </div>
 
@@ -88,8 +92,7 @@
                                 @if (auth()->user()->isAdmin())
                                     <a href="{{ route('assets.edit', $asset) }}" class="text-indigo-600">Edit</a>
                                     <form method="POST" action="{{ route('assets.destroy', $asset) }}"
-                                        data-confirm="Aset {{ $asset->name }} ({{ $asset->asset_code }}) akan dihapus dari daftar. Riwayat peminjamannya tetap tersimpan."
-                                        data-confirm-title="Hapus aset?"
+                                        data-confirm="Aset {{ $asset->name }} ({{ $asset->asset_code }}) akan dipindahkan ke Aset Terhapus. Riwayat peminjamannya tetap tersimpan dan asetnya bisa dipulihkan kapan saja."                                        data-confirm-title="Hapus aset?"
                                         data-confirm-button="Ya, hapus">
                                         @csrf @method('DELETE')
                                         <button class="text-red-600">Hapus</button>
