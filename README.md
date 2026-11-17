@@ -1,58 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Manajemen Aset dan Peminjaman Perangkat IT
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web berbasis Laravel untuk mencatat aset perangkat IT perusahaan dan
+mengelola peminjamannya oleh karyawan. Dibuat sebagai tugas magang di PT INTI,
+divisi Bisnis dan Teknologi (bidang Teknologi Informasi). Dijalankan di localhost.
 
-## About Laravel
+## Fitur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autentikasi (login, logout, register) dengan dua peran: **admin** dan **staff**
+- CRUD **Kategori** dan **Departemen** (khusus admin)
+- CRUD **Aset**: kode aset unik, foto, kondisi, status, pencarian, filter, pagination, soft delete
+- Modul **Peminjaman**: pengajuan pinjam, batas jatuh tempo, pencatatan pengembalian
+- **Dashboard** statistik aset dan peminjaman, berbeda untuk admin dan staff
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Teknologi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Komponen | Versi / Keterangan |
+|---|---|
+| Framework | Laravel Framework 13.40.0 |
+| PHP | PHP 8.5.7 |
+| Database | MySQL |
+| Autentikasi | Laravel Breeze (Blade) |
+| Tampilan | Blade, Tailwind CSS, Vite |
+| Lingkungan | Laragon (Windows) |
 
-## Learning Laravel
+## Hak Akses
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Fitur | Admin | Staff |
+|---|---|---|
+| Dashboard | Statistik seluruh data | Statistik peminjaman milik sendiri |
+| Kategori dan Departemen | CRUD | Tidak ada akses |
+| Aset | CRUD | Hanya melihat daftar dan detail |
+| Peminjaman | Melihat semua, meminjam untuk siapa saja, mencatat pengembalian | Meminjam untuk diri sendiri, melihat milik sendiri |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Aturan Bisnis
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- Hanya aset berstatus **Tersedia** yang bisa dipinjam.
+- Satu aset tidak bisa dipinjam dua orang bersamaan (proses dikunci di dalam transaksi database).
+- Maksimal **3 peminjaman aktif** per orang dan jatuh tempo maksimal **30 hari**.
+- Aset yang sedang dipinjam tidak bisa dihapus, dan statusnya tidak bisa diubah manual.
+- Saat dikembalikan, admin mencatat kondisi aset. Aset **rusak berat** otomatis masuk **Maintenance**.
+- Kategori dan departemen yang masih dipakai tidak bisa dihapus.
+- Aset dihapus dengan soft delete supaya riwayat peminjaman tetap utuh.
+- Status peminjaman (Dipinjam, Terlambat, Dikembalikan) dihitung otomatis dari tanggal.
 
-## Agentic Development
+## Instalasi
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Prasyarat: PHP [versi], Composer, Node.js (LTS), MySQL, Git.
 
 ```bash
-composer require laravel/boost --dev
+git clone [url-repository] asset-management
+cd asset-management
 
-php artisan boost:install
+composer install
+npm install
+
+cp .env.example .env
+php artisan key:generate
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Buat database kosong bernama `asset_management`, lalu sesuaikan `DB_USERNAME` dan
+`DB_PASSWORD` di file `.env`. Setelah itu:
 
-## Contributing
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Jalankan di dua terminal:
 
-## Code of Conduct
+```bash
+php artisan serve
+npm run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Buka http://127.0.0.1:8000.
 
-## Security Vulnerabilities
+## Akun Demo (hasil seeder)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Peran | Email | Password |
+|---|---|---|
+| Admin | admin@example.com | password |
+| Staff | staff@example.com | password |
 
-## License
+Akun ini hanya untuk lingkungan lokal dan harus diganti jika aplikasi dipakai di luar localhost.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Seeder juga membuat 6 departemen, 6 kategori, 40 aset, dan 11 data peminjaman
+(sudah dikembalikan, aktif, dan terlambat).
+
+## Struktur Database
+
+```mermaid
+erDiagram
+    DEPARTMENTS ||--o{ USERS : "anggota"
+    CATEGORIES  ||--o{ ASSETS : "mengelompokkan"
+    ASSETS      ||--o{ LOANS : "dipinjam"
+    USERS       ||--o{ LOANS : "meminjam"
+
+    DEPARTMENTS {
+        bigint id PK
+        string name UK
+    }
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        string password
+        enum role "admin | staff"
+        bigint department_id FK "nullable"
+    }
+    CATEGORIES {
+        bigint id PK
+        string name UK
+        text description
+    }
+    ASSETS {
+        bigint id PK
+        bigint category_id FK
+        string asset_code UK
+        string name
+        string brand
+        string serial_number
+        date purchase_date
+        enum condition "baik | rusak_ringan | rusak_berat"
+        enum status "tersedia | dipinjam | maintenance"
+        string photo
+        text notes
+        timestamp deleted_at "soft delete"
+    }
+    LOANS {
+        bigint id PK
+        bigint asset_id FK
+        bigint user_id FK
+        date loan_date
+        date due_date
+        timestamp returned_at "null = belum dikembalikan"
+        text notes
+    }
+```
+
+## Pengujian
+
+Buat database `asset_management_test`, pastikan `phpunit.xml` mengarah ke sana, lalu:
+
+```bash
+php artisan test
+```
+
+## Tangkapan Layar
+
+| Halaman | Gambar |
+|---|---|
+| Dashboard admin | ![Dashboard admin](docs/screenshots/dashboard-admin.png) |
+| Daftar aset | ![Daftar aset](docs/screenshots/assets-index.png) |
+| Form peminjaman | ![Form pinjam](docs/screenshots/loans-create.png) |
+| Daftar peminjaman | ![Daftar peminjaman](docs/screenshots/loans-index.png) |
+
+## Rencana Pengembangan
+
+- Manajemen user oleh admin (menutup registrasi publik)
+- Ekspor laporan ke Excel atau PDF
+- Notifikasi email untuk peminjaman yang terlambat
+- Halaman riwayat aset dan pemulihan aset yang dihapus
