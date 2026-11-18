@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DepartmentRequest;
 use App\Models\Department;
+use App\Models\Loan;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -16,7 +17,40 @@ class DepartmentController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('departments.index', compact('departments'));
+        $loanStats = Loan::active()
+            ->join('users', 'users.id', '=', 'loans.user_id')
+            ->selectRaw(
+                'users.department_id, COUNT(*) as active_total, '
+                . 'SUM(CASE WHEN loans.due_date < ? THEN 1 ELSE 0 END) as overdue_total',
+                [today()->toDateString()]
+            )
+            ->groupBy('users.department_id')
+            ->get()
+            ->keyBy('department_id');
+
+        return view('departments.index', compact('departments', 'loanStats'));
+    }
+
+    public function show(Department $department)
+    {
+        $users = $department->users()
+            ->with('activeLoans.asset')
+            ->withCount([
+                'activeLoans',
+                'activeLoans as overdue_loans_count' => fn ($q) => $q->whereDate('due_date', '<', today()),
+            ])
+            ->orderByDesc('overdue_loans_count') // yang terlambat tampil paling atas
+            ->orderBy('name')
+            ->get();
+
+        $stats = [
+            'members'   => $users->count(),
+            'borrowers' => $users->where('active_loans_count', '>', 0)->count(),
+            'borrowed'  => $users->sum('active_loans_count'),
+            'overdue'   => $users->sum('overdue_loans_count'),
+        ];
+
+        return view('departments.show', compact('department', 'users', 'stats'));
     }
 
     public function create()

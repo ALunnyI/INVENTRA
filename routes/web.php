@@ -33,7 +33,7 @@ Route::resource('assets', AssetController::class)->withTrashed(['show']);
 
     Route::middleware('admin')->group(function () {
         Route::resource('categories', CategoryController::class)->except('show');
-        Route::resource('departments', DepartmentController::class)->except('show');
+        Route::resource('departments', DepartmentController::class);
 
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');

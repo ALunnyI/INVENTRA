@@ -13,28 +13,31 @@ class UserSeeder extends Seeder
     {
         $tiId = Department::where('name', 'Teknologi Informasi')->value('id');
 
-        $admin = User::firstOrNew(['email' => 'admin@example.com']);
+        $admin = User::firstOrNew(['email' => 'admin@inventra.com']);
         $admin->forceFill([
             'name' => 'Administrator',
             'password' => Hash::make('password'),
             'role' => 'admin',
             'department_id' => $tiId,
             'email_verified_at' => now(),
+            'phone' => '081234567890',
         ])->save();
 
-        $staff = User::firstOrNew(['email' => 'staff@example.com']);
+        $staff = User::firstOrNew(['email' => 'staff@inventra.com']);
         $staff->forceFill([
-            'name' => 'Staff Demo',
+            'name' => 'Al',
             'password' => Hash::make('password'),
             'role' => 'staff',
             'department_id' => Department::where('name', 'Keuangan')->value('id'),
             'email_verified_at' => now(),
+            'phone' => '081298765432',
         ])->save();
 
         // 5 staff acak dari factory bawaan Laravel
         User::factory(5)->state(fn () => [
             'role' => 'staff',
             'department_id' => Department::inRandomOrder()->value('id'),
+            'phone'         => fake()->numerify('08##########'),
         ])->create();
     }
 }
