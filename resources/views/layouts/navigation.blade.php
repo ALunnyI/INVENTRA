@@ -36,6 +36,10 @@
                         <x-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
                             Departemen
                         </x-nav-link>
+
+                        <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                            Laporan
+                        </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -113,6 +117,10 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('departments.index')" :active="request()->routeIs('departments.*')">
                     Departemen
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                    Laporan
                 </x-responsive-nav-link>
             @endif
         </div>

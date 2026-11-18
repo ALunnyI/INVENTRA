@@ -26,6 +26,10 @@
                 <a href="{{ route('loans.index') }}" class="px-3 py-2 text-gray-600">Reset</a>
             </form>
 
+            @if (auth()->user()->isAdmin())
+                <a href="{{ route('reports.loans', request()->only('status')) }}" 
+                class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">Cetak</a>
+            @endif
             <a href="{{ route('loans.create') }}" class="px-4 py-2 bg-indigo-600 text-white rounded">+ Pinjam Aset</a>
         </div>
 

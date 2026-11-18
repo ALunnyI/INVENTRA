@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -33,6 +34,14 @@ Route::resource('assets', AssetController::class)->withTrashed(['show']);
     Route::middleware('admin')->group(function () {
         Route::resource('categories', CategoryController::class)->except('show');
         Route::resource('departments', DepartmentController::class)->except('show');
+
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [ReportController::class, 'index'])->name('index');
+            Route::get('/assets', [ReportController::class, 'assets'])->name('assets');
+            Route::get('/assets/csv', [ReportController::class, 'assetsCsv'])->name('assets.csv');
+            Route::get('/loans', [ReportController::class, 'loans'])->name('loans');
+            Route::get('/loans/csv', [ReportController::class, 'loansCsv'])->name('loans.csv');
+        });
     });
 });
 

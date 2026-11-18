@@ -36,6 +36,8 @@
 
             @if (auth()->user()->isAdmin())
                 <div class="flex gap-2">
+                    <a href="{{ route('reports.assets', request()->only(['category_id', 'status'])) }}"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">Cetak</a>
                     <a href="{{ route('assets.trashed') }}"
                     class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">Aset Terhapus</a>
                     <a href="{{ route('assets.create') }}"
