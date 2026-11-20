@@ -1,5 +1,5 @@
 <x-print-layout title="Laporan Peminjaman Aset" orientation="landscape" :filters="$filters"
-                :csv-url="route('reports.loans.csv', request()->query())">
+                :excel-url="route('reports.loans.xlsx', request()->query())">
 
     {{-- Ringkasan --}}
     <div class="grid grid-cols-2 gap-3 text-center text-sm sm:grid-cols-4">

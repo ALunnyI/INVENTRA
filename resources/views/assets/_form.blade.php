@@ -1,10 +1,17 @@
 @php $asset = $asset ?? new \App\Models\Asset; @endphp
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4"
+     x-data="assetCodeHint({{ $asset->exists ? 'false' : 'true' }}, '{{ route('assets.next-code') }}', '{{ old('category_id', $asset->category_id) }}')">
     <div>
         <x-input-label for="asset_code" value="Kode Aset" />
         <x-text-input id="asset_code" name="asset_code" type="text" class="mt-1 block w-full"
-                      :value="old('asset_code', $asset->asset_code)" />
+                    :value="old('asset_code', $asset->asset_code)"
+                    x-bind:placeholder="enabled ? (hint ? 'Otomatis: ' + hint : 'Pilih kategori untuk melihat kode otomatis') : ''" />
+        @unless ($asset->exists)
+            <p class="mt-1 text-xs text-gray-500">
+                Kosongkan untuk dibuat otomatis. Nomor final ditentukan saat disimpan.
+            </p>
+        @endunless
         <x-input-error :messages="$errors->get('asset_code')" class="mt-2" />
     </div>
 
@@ -17,7 +24,8 @@
 
     <div>
         <x-input-label for="category_id" value="Kategori" />
-        <select id="category_id" name="category_id" class="mt-1 block w-full border-gray-300 rounded-md">
+        <select id="category_id" name="category_id" x-model="categoryId"
+                class="mt-1 block w-full border-gray-300 rounded-md">
             <option value="">-- Pilih kategori --</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}"
@@ -94,3 +102,36 @@
               class="mt-1 block w-full border-gray-300 rounded-md">{{ old('notes', $asset->notes) }}</textarea>
     <x-input-error :messages="$errors->get('notes')" class="mt-2" />
 </div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('assetCodeHint', (enabled, url, initialCategory) => ({
+            enabled,
+            categoryId: initialCategory,
+            hint: '',
+
+            init() {
+                if (!this.enabled) return;
+                this.$watch('categoryId', () => this.fetchHint());
+                if (this.categoryId) this.fetchHint();
+            },
+
+            async fetchHint() {
+                if (!this.categoryId) {
+                    this.hint = '';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${url}?category_id=${this.categoryId}`, {
+                        headers: { Accept: 'application/json' },
+                    });
+                    if (!response.ok) throw new Error('gagal');
+                    this.hint = (await response.json()).code;
+                } catch (e) {
+                    this.hint = '';
+                }
+            },
+        }));
+    });
+</script>

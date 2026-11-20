@@ -20,12 +20,13 @@
 
         <table class="w-full bg-white shadow rounded text-left">
             <thead class="bg-indigo-50 text-indigo-900">
-                <tr><th class="p-3">Nama</th><th class="p-3">Jumlah Aset</th><th class="p-3">Aksi</th></tr>
+                <tr><th class="p-3">Nama</th><th class="p-3">Prefix</th><th class="p-3">Jumlah Aset</th><th class="p-3">Aksi</th></tr>
             </thead>
             <tbody>
             @forelse ($categories as $category)
                 <tr class="border-t">
                     <td class="p-3">{{ $category->name }}</td>
+                    <td class="p-3 font-mono text-sm">{{ $category->code_prefix ?: 'AST' }}</td>
                     <td class="p-3">{{ $category->assets_count }}</td>
                     <td class="p-3 flex gap-3">
                         <a href="{{ route('categories.edit', $category) }}" class="text-indigo-600">Edit</a>

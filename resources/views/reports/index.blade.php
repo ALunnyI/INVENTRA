@@ -54,9 +54,9 @@
                     <button class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
                         Tampilkan dan Cetak
                     </button>
-                    <button type="submit" formaction="{{ route('reports.assets.csv') }}" 
+                    <button type="submit" formaction="{{ route('reports.assets.xlsx') }}"
                             class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Unduh CSV
+                        Unduh Excel
                     </button>
                 </div>
             </form>
@@ -124,9 +124,9 @@
                     <button class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700">
                         Tampilkan dan Cetak
                     </button>
-                    <button type="submit" formaction="{{ route('reports.loans.csv') }}"
+                    <button type="submit" formaction="{{ route('reports.loans.xlsx') }}"
                             class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Unduh CSV
+                        Unduh Excel
                     </button>
                 </div>
             </form>

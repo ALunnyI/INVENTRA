@@ -47,7 +47,7 @@ class ReportTest extends TestCase
 
         $this->actingAs($staff)->get(route('reports.index'))->assertForbidden();
         $this->actingAs($staff)->get(route('reports.assets'))->assertForbidden();
-        $this->actingAs($staff)->get(route('reports.loans.csv'))->assertForbidden();
+        $this->actingAs($staff)->get(route('reports.loans.xlsx'))->assertForbidden();
     }
 
     public function test_asset_report_lists_assets_and_respects_filters(): void
@@ -80,23 +80,21 @@ class ReportTest extends TestCase
             ->assertDontSee('Aset Luar Periode');
     }
 
-    public function test_loan_report_validates_date_range(): void
+    public function test_loan_excel_export_is_admin_only(): void
     {
-        $this->actingAs($this->admin())
-            ->get(route('reports.loans', ['from' => '2026-03-31', 'to' => '2026-03-01']))
-            ->assertSessionHasErrors('to');
+        $this->actingAs(User::factory()->create(['role' => 'staff']))
+            ->get(route('reports.loans.xlsx'))
+            ->assertForbidden();
     }
 
-    public function test_asset_csv_is_downloadable_and_neutralises_formulas(): void
+    public function test_asset_excel_export_is_a_valid_download(): void
     {
-        $this->makeAsset(['asset_code' => 'CSV-001', 'name' => '=HYPERLINK("http://contoh.test")']);
+        $this->makeAsset(['asset_code' => 'XLS-001']);
 
-        $response = $this->actingAs($this->admin())->get(route('reports.assets.csv'));
+        $response = $this->actingAs($this->admin())->get(route('reports.assets.xlsx'));
 
-        $response->assertOk();
-        $content = $response->streamedContent();
-
-        $this->assertStringContainsString('CSV-001', $content);
-        $this->assertStringContainsString("'=HYPERLINK", $content);
+        $response->assertOk()->assertDownload();
+        // File .xlsx adalah arsip zip, dan setiap zip diawali "PK"
+        $this->assertStringStartsWith('PK', $response->streamedContent());
     }
 }

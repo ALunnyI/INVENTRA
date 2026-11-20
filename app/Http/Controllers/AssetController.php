@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AssetRequest;
 use App\Models\Asset;
 use App\Models\Category;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -55,10 +56,31 @@ class AssetController extends Controller implements HasMiddleware
             $data['photo'] = $request->file('photo')->store('assets', 'public');
         }
 
-        Asset::create($data);
+        if (blank($data['asset_code'] ?? null)) {
+            $category = Category::findOrFail($data['category_id']);
+
+            // Kalau dua admin menyimpan bersamaan dan nomornya bentrok, ulangi dengan nomor berikutnya
+            $asset = retry(
+                3,
+                fn () => Asset::create(array_merge($data, ['asset_code' => Asset::nextCodeFor($category)])),
+                50,
+                fn ($e) => $e instanceof UniqueConstraintViolationException
+            );
+        } else {
+            $asset = Asset::create($data);
+        }
 
         return redirect()->route('assets.index')
-            ->with('success', 'Aset berhasil ditambahkan.');
+            ->with('success', "Aset berhasil ditambahkan dengan kode {$asset->asset_code}.");
+    }
+
+    public function nextCode(Request $request)
+    {
+        $validated = $request->validate(['category_id' => ['required', 'exists:categories,id']]);
+
+        return response()->json([
+            'code' => Asset::nextCodeFor(Category::findOrFail($validated['category_id'])),
+        ]);
     }
 
     public function show(Request $request, Asset $asset)

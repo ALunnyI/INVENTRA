@@ -1,5 +1,5 @@
 <x-print-layout title="Laporan Status Aset" :filters="$filters"
-                :csv-url="route('reports.assets.csv', request()->query())">
+                :excel-url="route('reports.assets.xlsx', request()->query())">
 
     {{-- Ringkasan --}}
     <div class="grid grid-cols-3 gap-3 text-center text-sm sm:grid-cols-6">

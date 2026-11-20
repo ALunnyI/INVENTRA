@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/assets/{asset}/force', [AssetController::class, 'forceDestroy'])
         ->withTrashed()->name('assets.force-destroy');
 
+    Route::get('/assets/next-code', [AssetController::class, 'nextCode'])->name('assets.next-code');
+
 Route::resource('assets', AssetController::class)->withTrashed(['show']);
 
     Route::resource('loans', LoanController::class)->only(['index', 'create', 'store']);
@@ -38,9 +40,9 @@ Route::resource('assets', AssetController::class)->withTrashed(['show']);
         Route::prefix('reports')->name('reports.')->group(function () {
             Route::get('/', [ReportController::class, 'index'])->name('index');
             Route::get('/assets', [ReportController::class, 'assets'])->name('assets');
-            Route::get('/assets/csv', [ReportController::class, 'assetsCsv'])->name('assets.csv');
+            Route::get('/assets/xlsx', [ReportController::class, 'assetsXlsx'])->name('assets.xlsx');
             Route::get('/loans', [ReportController::class, 'loans'])->name('loans');
-            Route::get('/loans/csv', [ReportController::class, 'loansCsv'])->name('loans.csv');
+            Route::get('/loans/xlsx', [ReportController::class, 'loansXlsx'])->name('loans.xlsx');
         });
     });
 });

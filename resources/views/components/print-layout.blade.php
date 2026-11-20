@@ -2,7 +2,7 @@
     'title',
     'filters' => [],
     'orientation' => 'portrait',
-    'csvUrl' => null,
+    'excelUrl' => null,
 ])
 
 <!DOCTYPE html>
@@ -46,10 +46,10 @@
                 &larr; Kembali
             </a>
             <div class="flex gap-2">
-                @if ($csvUrl)
-                    <a href="{{ $csvUrl }}"
-                       class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Unduh CSV
+                @if ($excelUrl)
+                    <a href="{{ $excelUrl }}"
+                    class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        Unduh Excel
                     </a>
                 @endif
                 <button type="button" onclick="window.print()"

@@ -11,6 +11,8 @@ class Asset extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const DEFAULT_CODE_PREFIX = 'AST';
+
     public const CONDITIONS = [
         'baik' => 'Baik',
         'rusak_ringan' => 'Rusak Ringan',
@@ -29,6 +31,22 @@ class Asset extends Model
     ];
 
     protected $casts = ['purchase_date' => 'date'];
+
+    public static function nextCodeFor(Category $category): string
+    {
+        $prefix = $category->code_prefix ?: self::DEFAULT_CODE_PREFIX;
+
+        // withTrashed: kode aset yang sudah dihapus tidak boleh dipakai ulang
+        $highest = static::withTrashed()
+            ->where('asset_code', 'like', $prefix . '-%')
+            ->pluck('asset_code')
+            ->map(fn (string $code) => preg_match('/^' . preg_quote($prefix, '/') . '-(\d+)$/i', $code, $match)
+                ? (int) $match[1]
+                : 0)
+            ->max() ?? 0;
+
+        return sprintf('%s-%03d', $prefix, $highest + 1);
+    }
 
     public function category()
     {

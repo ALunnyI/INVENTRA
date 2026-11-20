@@ -18,7 +18,8 @@ class AssetRequest extends FormRequest
         return [
             'category_id' => ['required', 'exists:categories,id'],
             'asset_code' => [
-                'required', 'string', 'max:30',
+                $this->route('asset') ? 'required' : 'nullable', // boleh kosong hanya saat menambah aset baru
+                'string', 'max:30',
                 Rule::unique('assets', 'asset_code')->ignore($this->asset),
             ],
             'name' => ['required', 'string', 'max:255'],

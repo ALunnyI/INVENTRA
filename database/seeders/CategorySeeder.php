@@ -8,18 +8,21 @@ use Illuminate\Database\Seeder;
 class CategorySeeder extends Seeder
 {
     public function run(): void
-    {
-        $categories = [
-            'Laptop' => 'Laptop kerja untuk karyawan dan peminjaman sementara.',
-            'Monitor' => 'Monitor dan layar tambahan.',
-            'Printer' => 'Printer dan perangkat cetak.',
-            'Proyektor' => 'Proyektor untuk rapat dan presentasi.',
-            'Perangkat Jaringan' => 'Router, switch, dan access point.',
-            'Smartphone & Tablet' => 'Perangkat mobile untuk pengujian dan operasional.',
-        ];
+{
+    $categories = [
+        'Laptop'              => ['LPT', 'Laptop kerja untuk karyawan dan peminjaman sementara.'],
+        'Monitor'             => ['MON', 'Monitor dan layar tambahan.'],
+        'Printer'             => ['PRN', 'Printer dan perangkat cetak.'],
+        'Proyektor'           => ['PRJ', 'Proyektor untuk rapat dan presentasi.'],
+        'Perangkat Jaringan'  => ['NET', 'Router, switch, dan access point.'],
+        'Smartphone & Tablet' => ['MOB', 'Perangkat mobile untuk pengujian dan operasional.'],
+    ];
 
-        foreach ($categories as $name => $description) {
-            Category::firstOrCreate(['name' => $name], ['description' => $description]);
-        }
+    foreach ($categories as $name => [$prefix, $description]) {
+        Category::updateOrCreate(
+            ['name' => $name],
+            ['code_prefix' => $prefix, 'description' => $description]
+        );
     }
+}
 }
